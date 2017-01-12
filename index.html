@@ -24,7 +24,7 @@
 	<body>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenLite.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
 
 		<script src="lib/OrbitControls.js"></script>
@@ -36,8 +36,8 @@
 		<script src="js/scripts.js"></script>
 
 		<div style="position: absolute; top: 10px; width: 100%; text-align: center; ">
-			<h2 id=game-message>Placement Phase: <br>Place Your Pieces Anywhere On The Board.</h2>
-			<button id="button-next">NEXT</button>
+			<h2 id="game-message">Placement Phase: <br>Place Your Pieces Anywhere On The Board.</h2>
+			<button id="button-next">START</button>
 		</div>
 
 
@@ -52,12 +52,12 @@
 			var lookAtScene = true;
 			var gameMessageDomObject;
 			var buttonNext;
-			var gameMessages = ['Placement Phase: <br>Place Your Pieces Anywhere On The Board.',
-													'Red Turn: Move One Of Your Pieces To An Adjacent Tile',
-													'Red Turn: Build A Structure On An Adjacent Tile (at any height)',
-													'Blue Turn: Move',
-													'Blue Turn: Build',
-													'Win']
+			var gameMessages = ['0 Placement Phase: <br>Place Your Pieces Anywhere On The Board.',
+													'1 Red Turn: Move One Of Your Pieces To An Adjacent Tile',
+													'2 Red Turn: Build A Structure On An Adjacent Tile (at any height)',
+													'3 Blue Turn: Move',
+													'4 Blue Turn: Build',
+													'5 Win']
 			var playerBlockedTiles = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1], [-1, -1, -1]];
 
 			var gameState = 0;	//0: Placement, 1: TurnRed Move, 2: TurnRed Build, 3: TurnBlue Move, 4: TurnBlue Build, 5: End
@@ -94,7 +94,10 @@
 				var geometry = new THREE.BoxGeometry( 1, 1000, 1 );
 				var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
 				var cube = new THREE.Mesh( geometry, material );
-				scene.add( cube );
+				cube.position.x = 0;
+				cube.position.y = 0;
+				cube.position.z = 0;
+				//scene.add( cube );
 
 				// Grid
 				var gridSize = 500;
@@ -107,23 +110,26 @@
 				//scene.add( gridHelper );
 
 				//Player
-				var playerGeometry = new THREE.CylinderBufferGeometry( 50, 50, 100, 8 );
+				var playerGeometry = new THREE.CylinderBufferGeometry( 50, 50, 100, 32 );
+				//var playerGeometry = new THREE.BoxGeometry( 50, 100, 50, 1, 1, 1);
 				var materialRedA = new THREE.MeshLambertMaterial( {color: 0xFF0000} );
 				var materialRedB = new THREE.MeshLambertMaterial( {color: 0xFF0000} );
 				playerOneA = new THREE.Mesh( playerGeometry, materialRedA );
 				playerOneB = new THREE.Mesh( playerGeometry, materialRedB );
 				playerOneA.userData.type ='playerpiece';
+				playerOneA.userData.color ='red';
 				playerOneA.userData.id = 0;
 				playerOneA.userData.pos = [-1, -1, -1];
 				playerOneA.position.x = -200;
-				playerOneA.position.y = 60;
+				playerOneA.position.y = 100;
 				playerOneA.position.z = 50;
 
 				playerOneB.userData.type ='playerpiece';
+				playerOneB.userData.color ='red';
 				playerOneB.userData.id = 1;
 				playerOneB.userData.pos = [-1, -1, -1];
 				playerOneB.position.x = -200;
-				playerOneB.position.y = 60;
+				playerOneB.position.y = 100;
 				playerOneB.position.z = 200;
 				scene.add( playerOneA );
 				scene.add( playerOneB );
@@ -133,23 +139,26 @@
 				playerTwoA = new THREE.Mesh( playerGeometry, materialBlueA );
 				playerTwoB = new THREE.Mesh( playerGeometry, materialBlueB );
 				playerTwoA.userData.type ='playerpiece';
+				playerTwoA.userData.color ='blue';
 				playerTwoA.userData.id = 2;
 				playerTwoA.userData.pos = [-1, -1, -1];
 				playerTwoA.position.x = 1200;
-				playerTwoA.position.y = 60;
+				playerTwoA.position.y = 100;
 				playerTwoA.position.z = 800;
 
 				playerTwoB.userData.type ='playerpiece';
+				playerTwoB.userData.color ='blue';
 				playerTwoB.userData.id = 3;
 				playerTwoB.userData.pos = [-1, -1, -1];
 				playerTwoB.position.x = 1200;
-				playerTwoB.position.y = 60;
+				playerTwoB.position.y = 100;
 				playerTwoB.position.z = 950;
 				scene.add( playerTwoA );
 				scene.add( playerTwoB );
 
 				// Cubes
-				var boxGeometry = new THREE.BoxGeometry( boxSize, boxSize/8, boxSize, 1, 1, 1);
+				//var boxGeometry = new THREE.BoxGeometry( boxSize, boxSize/8, boxSize, 1, 1, 1);
+				var boxGeometry = new THREE.PlaneGeometry( boxSize, boxSize, 1 );
 				var row = -1;
 				var col = -1;
 				var lay = 0;
@@ -169,7 +178,9 @@
 
 					var j = i % 5;
 					cube.position.x = boxSize * j + boxSize/2;
-					cube.position.z = boxSize * row - boxSize/2;
+					cube.position.y = 50;
+					cube.position.z = boxSize * row + boxSize/2;
+					cube.rotation.x = Math.PI / -2;
 					scene.add(cube);
 				}
 
@@ -177,15 +188,15 @@
 				var directionalLight = new THREE.DirectionalLight( 0xffffff );
 				directionalLight.position.x = 1;
 				directionalLight.position.y = 1;
-				directionalLight.position.z = 0;
+				directionalLight.position.z = 1;
 				directionalLight.position.normalize();
-				directionalLight.intensity = 0.5;
+				directionalLight.intensity = 1;
 				scene.add( directionalLight );
 
 				raycaster = new THREE.Raycaster();
 
 				//renderer = new THREE.CanvasRenderer();
-				renderer = new THREE.WebGLRenderer();
+				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.setClearColor( 0xf0f0f0 );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
@@ -219,30 +230,14 @@
 
 			function onButtonNext( event ) {
 				event.preventDefault();
+				$(event.currentTarget).css('opacity',0);
 				setGameState(1);
+				resetHighlights();
 			}
 
 			function setGameState(state) {
 				gameState = state;
-
 				updateGameMessage(gameState);
-
-				switch(state) {
-					case 0:
-						resetHighlights();
-						break;
-					case 1:
-						resetHighlights();
-						break;
-					case 2:
-						break;
-					case 3:
-						break;
-					case 4:
-						break;
-					case 5:
-						break;
-				}
 			}
 
 			function checkGameState(currentObject) {
@@ -252,8 +247,8 @@
 					case 0:
 						//PLACEMENT
 						if(currentObject.userData.type == 'playerpiece') {
+							currentPlayerPiece = currentObject;
 							resetHighlights();
-
 							if(currentObject.userData.id == 0) {
 								playerOneA.material.color.setHex(0xffb4b4);
 							} else if(currentObject.userData.id == 1) {
@@ -263,12 +258,11 @@
 							} else if(currentObject.userData.id == 3) {
 								playerTwoB.material.color.setHex(0xb4b6ff);
 							}
-							currentPlayerPiece = currentObject;
 						}
 
 						//moving playerpiece to valid tilepiece
 						if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece) {
-							if(isValidMove(currentPlayerPiece, currentGameObject)){
+							if(isValidMove(currentPlayerPiece, currentGameObject, false)){
 								moveToTile(currentPlayerPiece, currentGameObject);
 							} else {
 								//move invalid
@@ -276,24 +270,26 @@
 						}
 						break;
 					case 1:
+						//resetting available moves
+						noMovesLeft = false;
+						availableMovesRed = 1;
+						availableMovesBlue = 1;
+
 						//RED: MOVE
-						if(currentObject.userData.type == 'playerpiece') {
-							playerOneA.material.color.setHex(0xFF0000);
-							playerOneB.material.color.setHex(0xFF0000);
-							playerTwoA.material.color.setHex(0x0000FF);
-							playerTwoB.material.color.setHex(0x0000FF);
+						if(currentObject.userData.type == 'playerpiece' && currentObject.userData.color == 'red') {
+							currentPlayerPiece = currentObject;
+							resetHighlights();
 
 							if(currentObject.userData.id == 0) {
 								playerOneA.material.color.setHex(0xffb4b4);
 							} else if(currentObject.userData.id == 1) {
 								playerOneB.material.color.setHex(0xffb4b4);
 							}
-							currentPlayerPiece = currentObject;
 						}
 
 						//moving playerpiece to valid tilepiece
-						if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece) {
-							if(isValidMove(currentPlayerPiece, currentGameObject)){
+						if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'red') {
+							if(isValidMove(currentPlayerPiece, currentGameObject, false)){
 								moveToTile(currentPlayerPiece, currentGameObject);
 							} else {
 								//move invalid
@@ -303,8 +299,7 @@
 						break;
 					case 2:
 						//RED: BUILD
-
-						if(isValidMove(currentPlayerPiece, currentGameObject)){
+						if(isValidMove(currentPlayerPiece, currentGameObject, true)){
 							buildOnTile(currentPlayerPiece, currentGameObject);
 						} else {
 							//placement invalid
@@ -312,6 +307,37 @@
 
 						break;
 					case 3:
+						//BLUE: MOVE
+						if(currentObject.userData.type == 'playerpiece' && currentObject.userData.color == 'blue') {
+							resetHighlights();
+
+							if(currentObject.userData.id == 2) {
+								playerTwoA.material.color.setHex(0xb4b6ff);
+								currentPlayerPiece = currentObject;
+							} else if(currentObject.userData.id == 3) {
+								playerTwoB.material.color.setHex(0xb4b6ff);
+								currentPlayerPiece = currentObject;
+							}
+						}
+
+						//moving playerpiece to valid tilepiece
+						if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'blue') {
+							if(isValidMove(currentPlayerPiece, currentGameObject, false)){
+								moveToTile(currentPlayerPiece, currentGameObject);
+							} else {
+								//move invalid
+							}
+						}
+
+						break;
+					case 4:
+						//BLUE: BUILD
+						if(isValidMove(currentPlayerPiece, currentGameObject, true)){
+							buildOnTile(currentPlayerPiece, currentGameObject);
+						} else {
+							//placement invalid
+						}
+
 						break;
 				}
 			}
@@ -324,7 +350,32 @@
 			}
 
 			function moveToTile(playerPiece, targetTile) {
-				TweenLite.to(playerPiece.position, 1, {x:targetTile.position.x, z:targetTile.position.z})
+				var newLayerIndex = targetTile.userData.pos[2]+1;
+				var newHeight = newLayerIndex * boxSize/2;
+
+				//bezier tween adjustments
+				var bx, bz;
+				var dim = 50;
+				if(targetTile.position.x > playerPiece.position.x) {
+					bx = playerPiece.position.x + dim;
+				} else if(targetTile.position.x < playerPiece.position.x) {
+					bx = playerPiece.position.x - dim;
+				} else {
+					bx = playerPiece.position.x;
+				}
+
+				if(targetTile.position.z > playerPiece.position.z) {
+					bz = playerPiece.position.z + dim;
+				} else if(targetTile.position.z < playerPiece.position.z) {
+					bz = playerPiece.position.z - dim;
+				} else {
+					bz = playerPiece.position.z;
+				}
+
+				TweenMax.to(playerPiece.position, 0.5, {bezier:[{x:bx, y:newHeight+100, z:bz},
+																												{x:targetTile.position.x, y:newHeight, z:targetTile.position.z}],
+																												ease:Sine.easeInOut});
+
 				playerPiece.userData.pos = targetTile.userData.pos;
 				updatePlayerBlockedTiles(playerPiece, targetTile);
 
@@ -335,18 +386,36 @@
 						setGameState(2);
 					}
 				}
+
+				//blue turn: allow only one move
+				if(gameState == 3) {
+					availableMovesBlue--;
+					if(availableMovesBlue == 0) {
+						setGameState(4);
+					}
+				}
+
+				//win condition
+				if(newLayerIndex == 4) {
+					setGameState(5);
+					console.log(playerPiece.userData.color + ' wins!');
+				}
 			}
 
 			function buildOnTile(playerPiece, targetTile) {
+				resetHighlights();
 				//cube.userData.pos = [row, col, lay];
-				var newLayerIndex = targetTile.userData.pos[2] + 1;
+				var newLayerIndex = targetTile.userData.pos[2]+1;
+				var newHeight = newLayerIndex * boxSize/2;
 
 				var geometry = new THREE.BoxGeometry( boxSize, boxSize/2, boxSize );
 				var material = new THREE.MeshLambertMaterial( {color: layerColors[newLayerIndex]} );
 				var newCube = new THREE.Mesh( geometry, material );
 
+				console.log('B newHeight', targetTile.position.y, newLayerIndex);
+
 				newCube.position.x = targetTile.position.x;
-				newCube.position.y = targetTile.position.y + 20;
+				newCube.position.y = newHeight;
 				newCube.position.z = targetTile.position.z;
 
 				newCube.userData.type = targetTile.userData.type;
@@ -359,8 +428,11 @@
 
 				scene.add( newCube );
 
-				setGameState(gameState+1);
-
+				if(gameState != 4){
+					setGameState(gameState+1);
+				} else {
+					setGameState(1);
+				}
 			}
 
 			function updatePlayerBlockedTiles(playerPiece, targetTile) {
@@ -371,13 +443,14 @@
 				playerBlockedTiles[currentPlayerPieceId].push(currentTargetTileId[0], currentTargetTileId[1], currentTargetTileId[2]);
 			}
 
-			function isValidMove(playerPiece, targetTile) {
+			function isValidMove(playerPiece, targetTile, isBuildMove) {
 				//flags
 				var allValid = true;
 				var isTargetBlockedByPlayer = false;
 				var isTargetNotAdjacent = false;
 				var isTargetToHigh = false;
 				var noMovesLeft = false;
+				var isMaximumHeight = false;
 
 				var startRow = playerPiece.userData.pos[0];
 				var startCol = playerPiece.userData.pos[1];
@@ -390,10 +463,30 @@
 				var deltaRow = Math.abs(startRow - targetRow);
 				var deltaCol = Math.abs(startCol - targetCol);
 				var deltaLay = Math.abs(startLay - targetLay);
+				var absLay = startLay - targetLay;
 
-				//check if move is within range
-				if(deltaRow > 1 || deltaCol > 1 || deltaLay > 1) {
-					isTargetNotAdjacent = true;
+
+				//extra rule for building UP (can build up to 3 layers)
+				if(isBuildMove) {
+					if(deltaRow > 1 || deltaCol > 1 || deltaLay > 4) {
+						console.log('HIGH DISTANCE BUILDING');
+						isTargetNotAdjacent = true;
+					}
+				} else {
+					//check if move is within range
+					if(deltaRow > 1 || deltaCol > 1 || deltaLay > 1) {
+						isTargetNotAdjacent = true;
+
+						if(absLay > 0) {
+							console.log('JUMPING FROM A GREAT HEIGHT');
+							isTargetNotAdjacent = false;
+						}
+					}
+				}
+
+				//check for maximum height
+				if(targetLay > 3) {
+					isMaximumHeight = true
 				}
 
 				//no range limit in placement phase
@@ -404,7 +497,7 @@
 				//check if a move is left
 				if(gameState == 1 && availableMovesRed == 0) {
 					noMovesLeft = true;
-				} else if(gameState == 2 && availableMovesBlue == 0) {
+				} else if(gameState == 3 && availableMovesBlue == 0) {
 					noMovesLeft = true;
 				}
 
@@ -416,8 +509,8 @@
 				}
 
 				//sum up flags
-				if(isTargetBlockedByPlayer || isTargetNotAdjacent || noMovesLeft) {
-					console.log('isTargetBlockedByPlayer: ', isTargetBlockedByPlayer, 'isTargetNotAdjacent: ', isTargetNotAdjacent, 'noMovesLeft: ', noMovesLeft);
+				if(isTargetBlockedByPlayer || isTargetNotAdjacent || noMovesLeft || isMaximumHeight) {
+					console.log('isBuildMove:', isBuildMove, ' isTargetBlockedByPlayer: ', isTargetBlockedByPlayer, ' isTargetNotAdjacent: ', isTargetNotAdjacent, ' noMovesLeft: ', noMovesLeft, ' isMaximumHeight: ',isMaximumHeight);
 					allValid = false;
 				}
 
