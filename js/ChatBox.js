@@ -19,12 +19,9 @@ var ChatBox = function() {
   //Setting user name
   this.setName = function() {
     //name = prompt("Enter your name:","Chater");
-    var randomName = 'name' + Math.random() * 10000;
+    var randomName = 'Player' + Math.round(Math.random() * 10000);
     name = randomName;
 
-    if (!name || name === "") {
-      name = "Chater";
-    }
     name = name.replace(/(<([^>]+)>)/ig, "");
   };
   //For sending message
@@ -68,5 +65,5 @@ var ChatBox = function() {
   };
 };
 // Creating Object for Chat Engine
-var chat = new ChatEngine();
+var chat = new ChatBox();
 chat.init();
