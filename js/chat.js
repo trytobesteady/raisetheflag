@@ -58,7 +58,7 @@ var ChatEngine = function() {
     server.onmessage = function(e) {
       if (oldata != e.data) {
         if(!chatZone) {
-          chatZone = document.getElementById("chatZone");          
+          chatZone = document.getElementById("chatZone");
         }
 
         chatZone.innerHTML += e.data;

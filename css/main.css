@@ -4,10 +4,15 @@ body{
 	line-height: 32px;
 	color: #000;
 	font-weight: normal;
+	    margin: 0;
 }
 
 a {
   color: red;
+}
+
+#button-next {
+	z-index: 1000;
 }
 
 #error-message {
@@ -17,8 +22,9 @@ a {
 .container{
   position: absolute;
 	margin: 0 auto;
-	width: 500px;
+	width: 300px;
   right: 0;
+	bottom: 0px;
 }
 
 .chat-zone{
@@ -46,6 +52,7 @@ margin: 0 5px;
 }
 .chat form{
 	margin: 10px 0 0 0;
+	display: flex;
 }
 input[type="text"]{
 	border: 1px solid #cccccc;
@@ -63,7 +70,7 @@ input[type="submit"]{
 	color: #fff;
 	font-weight: bold;
 	cursor: pointer;
-	margin: 5px 0 0 60px;
+	margin: 5px 0 0 6px;
 	padding: 6px 10px;
 	border: 1px solid #777;
 	background: #333537;
