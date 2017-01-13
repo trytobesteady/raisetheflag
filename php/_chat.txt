@@ -1,0 +1,1 @@
+<div class="chatmsg"><b>fds</b>: 123 123<br/></div>

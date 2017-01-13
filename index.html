@@ -4,25 +4,9 @@
 		<title>three.js canvas - combo camera - orthographic + perspective</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
 
-			body {
-				font-family: Monospace;
-				background-color: #f0f0f0;
-				margin: 0px;
-				overflow: hidden;
-				color: black;
-			}
+		<link rel="stylesheet" href="css/main.css">
 
-			a {
-				color: red;
-			}
-
-			#error-message {
-				color: red;
-			}
-
-		</style>
 	</head>
 
 	<body>
@@ -37,13 +21,26 @@
 		<script src="lib/CanvasRenderer.js"></script>
 		<script src="lib/stats.min.js"></script>
 
-		<script src="js/scripts.js"></script>
+		<script type="text/javascript" src="js/chat.js"></script>
+		<script type="text/javascript" src="js/script.js"></script>
+
 
 		<div style="position: absolute; top: 10px; width: 100%; text-align: center; ">
 			<h2 id="game-message">Placement Phase: <br>Place Your Pieces Anywhere On The Board.</h2>
 			<h2 id="error-message"></h2>
 			<button id="button-next">START</button>
 		</div>
+
+		<div class="container">
+			<div class="chat">
+				<form onsubmit="chat.sendMsg(); return false;">
+					<input type="text" id="msg" name="msg" autofocus="true" placeholder="Type Your Message Here" />
+					<input type="submit" />
+				</form>
+				<div id="chatZone" name="chatZone"></div>
+			</div>
+		</div>
+
 
 
 		<script>
@@ -607,6 +604,7 @@
 
 			var dropInterval = 1;
 			var increment = 0;
+			var initialLookAt = true;
 
 			function render() {
 				lightHelper.update();
@@ -615,7 +613,13 @@
 
 				if (increment / dropInterval == 1) {
 					increment = 0;
-					camera.lookAt(new THREE.Vector3(500,0,500));
+
+					if(initialLookAt) {
+						camera.lookAt(new THREE.Vector3(500,0,500));
+						initialLookAt = false;
+					}
+
+
 
 					// find intersections
 					raycaster.setFromCamera( mouse, camera );
