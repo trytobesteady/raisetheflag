@@ -18,6 +18,10 @@
 				color: red;
 			}
 
+			#error-message {
+				color: red;
+			}
+
 		</style>
 	</head>
 
@@ -37,6 +41,7 @@
 
 		<div style="position: absolute; top: 10px; width: 100%; text-align: center; ">
 			<h2 id="game-message">Placement Phase: <br>Place Your Pieces Anywhere On The Board.</h2>
+			<h2 id="error-message"></h2>
 			<button id="button-next">START</button>
 		</div>
 
@@ -51,6 +56,7 @@
 			var boxSize = 200;
 			var lookAtScene = true;
 			var gameMessageDomObject;
+			var errorMessageDomObject;
 			var buttonNext;
 			var gameMessages = ['0 Placement Phase: <br>Place Your Pieces Anywhere On The Board.',
 													'1 Red Turn: Move',
@@ -67,6 +73,8 @@
 
 			var layerColors = [0xfee4a2, 0xfdfac2, 0xd9d746, 0xf7f461];
 
+			var lightHelper;
+
 
 			//var playerOneCurrentPiece = -1;
 			//var playerTwoCurrentPiece = -1;
@@ -81,6 +89,7 @@
 				document.body.appendChild( container );
 
 				gameMessageDomObject = $('#game-message');
+				errorMessageDomObject = $('#error-message');
 				buttonNext = $('#button-next')[0];
 
 				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1 , 1000000);
@@ -91,12 +100,12 @@
 				scene = new THREE.Scene();
 
 				// Zero
-				var geometry = new THREE.BoxGeometry( 1000, 10, 1000 );
+				var geometry = new THREE.BoxGeometry( 10, 10, 10 );
 				var material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
 				var cube = new THREE.Mesh( geometry, material );
-				cube.position.x = 0;
-				cube.position.y = -100;
-				cube.position.z = 0;
+				cube.position.x = 500;
+				cube.position.y = 110;
+				cube.position.z = 500;
 				cube.receiveShadow = true;
 				//scene.add( cube );
 
@@ -193,18 +202,20 @@
 					scene.add(plane);
 				}
 
-				// Lights
+				var boardCenter = new THREE.Object3D();
+				boardCenter.position.set( 500, 100, 500 );
+				scene.add(boardCenter);
 
+				// Lights
 				var ambient = new THREE.AmbientLight( 0x404040 ); // soft white light
 				ambient.position.set( 0, 1500, 0 );
 				ambient.intensity = 0.6;
 				scene.add( ambient );
 
 				var light = new THREE.SpotLight( 0xffffff, 1, 0, Math.PI / 2 );
-				light.position.set( 1500, 1500, 1500 );
-				light.target.position.set( 0, 0, 0 );
+				light.position.set( 1000, 1500, 1000 );
 				light.castShadow = true;
-				light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera( 50, 1, 1200, 3000 ) );
+				light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera( 50, 1, 100, 3000 ) );
 				light.shadow.bias = 0.0001;
 				light.shadow.mapSize.width = 1024;
 				light.shadow.mapSize.height = 1024;
@@ -213,7 +224,9 @@
 				light.angle = Math.PI / 4;
 				light.intensity = 0.4;
 				light.distance = 3000;
+				light.target = boardCenter;
 				scene.add( light );
+
 
 				raycaster = new THREE.Raycaster();
 				//renderer = new THREE.CanvasRenderer();
@@ -227,8 +240,8 @@
 				renderer.gammaOutput = true;
 				container.appendChild( renderer.domElement );
 
-				var lightHelper = new THREE.SpotLightHelper( light );
-				//scene.add( lightHelper );
+				lightHelper = new THREE.SpotLightHelper( light );
+				scene.add( lightHelper );
 
 				controls = new THREE.OrbitControls( camera, renderer.domElement );
 				controls.target.set(500, 0, 500);
@@ -258,9 +271,28 @@
 
 			function onButtonNext( event ) {
 				event.preventDefault();
-				$(event.currentTarget).css('opacity',0);
-				setGameState(1);
-				resetHighlights();
+
+				if(allPiecesPlaced()) {
+					$(event.currentTarget).css('opacity', 0);
+					setGameState(1);
+					resetHighlights();
+					errorMessageDomObject.empty();
+				} else {
+					errorMessageDomObject.html('Not All Pieces Are Placed On The Board');
+				}
+			}
+
+			function allPiecesPlaced() {
+				var flag = true;
+				for (var i = 0; i < playerBlockedTiles.length; i++) {
+					for (var j = 0; j < playerBlockedTiles[i].length; j++) {
+						if(playerBlockedTiles[i][j] == -1) {
+							flag = false;
+						}
+					}
+				}
+
+				return flag;
 			}
 
 			function setGameState(state) {
@@ -533,14 +565,14 @@
 					isTargetNotAdjacent = false;
 				}
 
-				//check if a move is left
+				//check if a piece has moves left
 				if(gameState == 1 && availableMovesRed == 0) {
 					noMovesLeft = true;
 				} else if(gameState == 3 && availableMovesBlue == 0) {
 					noMovesLeft = true;
 				}
 
-				//check if another playerblock is in the way
+				//check if another playerpiece is in the way
 				for (var i = 0; i < playerBlockedTiles.length; i++) {
 					if(targetRow == playerBlockedTiles[i][0] && targetCol == playerBlockedTiles[i][1] && targetLay == playerBlockedTiles[i][2]) {
 						isTargetBlockedByPlayer = true;
@@ -577,6 +609,8 @@
 			var increment = 0;
 
 			function render() {
+				lightHelper.update();
+
 				increment++
 
 				if (increment / dropInterval == 1) {
