@@ -1,4 +1,4 @@
-var ChatEngine = function() {
+var ChatBox = function() {
   var name = "";
   var msg = "";
   var chatZone;
