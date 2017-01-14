@@ -12,10 +12,11 @@ var GameState = function() {
   }
 
   exports.checkState = function(currentObject) {
-    console.log(exports.state, currentObject.userData);
+    //console.log(exports.state, currentObject.userData);
 
     switch(exports.state) {
       case 0:
+
         //PLACEMENT
         if(currentObject.userData.type == 'playerpiece') {
           currentPlayerPiece = currentObject;
@@ -34,11 +35,18 @@ var GameState = function() {
         //moving playerpiece to valid tilepiece
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece) {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
-            Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+
+            var pieceId = 'p' + currentPlayerPiece.userData.id;
+            var col = currentPlayerPiece.userData.color;
+            var targetId = Main.currentGameObject.id;
+            GameTransmit.sendMove(pieceId, 'move', targetId);
+
           } else {
             //move invalid
           }
         }
+
         break;
       case 1:
         //resetting available moves
@@ -60,7 +68,12 @@ var GameState = function() {
         //moving playerpiece to valid tilepiece
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'red') {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
-            Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            var pieceId = 'p' + currentPlayerPiece.userData.id;
+            var col = currentPlayerPiece.userData.color;
+            var targetId = Main.currentGameObject.id;
+            GameTransmit.sendMove(pieceId, 'move', targetId);
+
           } else {
             //move invalid
           }
@@ -70,7 +83,12 @@ var GameState = function() {
       case 2:
         //RED: BUILD
         if(isValidMove(currentPlayerPiece, Main.currentGameObject, true)){
-          Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          //Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          var pieceId = 'p' + currentPlayerPiece.userData.id;
+          var col = currentPlayerPiece.userData.color;
+          var targetId = Main.currentGameObject.id;
+          GameTransmit.sendMove(pieceId, 'build', targetId);
+
         } else {
           //placement invalid
         }
@@ -93,7 +111,11 @@ var GameState = function() {
         //moving playerpiece to valid tilepiece
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'blue') {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
-            Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            var pieceId = 'p' + currentPlayerPiece.userData.id;
+            var col = currentPlayerPiece.userData.color;
+            var targetId = Main.currentGameObject.id;
+            GameTransmit.sendMove(pieceId, 'move', targetId);
           } else {
             //move invalid
           }
@@ -103,7 +125,11 @@ var GameState = function() {
       case 4:
         //BLUE: BUILD
         if(isValidMove(currentPlayerPiece, Main.currentGameObject, true)){
-          Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          //Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          var pieceId = 'p' + currentPlayerPiece.userData.id;
+          var col = currentPlayerPiece.userData.color;
+          var targetId = Main.currentGameObject.id;
+          GameTransmit.sendMove(pieceId, 'build', targetId);
         } else {
           //placement invalid
         }
@@ -146,8 +172,9 @@ var GameState = function() {
       if(deltaRow > 1 || deltaCol > 1 || deltaLay > 1) {
         isTargetNotAdjacent = true;
 
-        if(absLay > 0) {
-          console.log('JUMPING FROM A GREAT HEIGHT');
+        //TODO ALLOWS MORE THAN ONE!
+        if(deltaRow > 1 || deltaCol > 1 || absLay > 0) {
+          //console.log('FIX: JUMPING FROM A GREAT HEIGHT');
           isTargetNotAdjacent = false;
         }
       }

@@ -5,10 +5,9 @@ var ChatBox = function() {
   var oldata = "";
   var server = "";
   var xhr = "";
-  //initialzation
+
   this.init = function() {
     chatZone = document.getElementById("chatZone");
-
     if (EventSource) {
       this.setName();
       this.initServer();
@@ -16,12 +15,12 @@ var ChatBox = function() {
       alert("Use latest Chrome or FireFox");
     }
   };
+
   //Setting user name
   this.setName = function() {
     //name = prompt("Enter your name:","Chater");
     var randomName = 'Player' + Math.round(Math.random() * 10000);
     name = randomName;
-
     name = name.replace(/(<([^>]+)>)/ig, "");
   };
   //For sending message
@@ -49,18 +48,21 @@ var ChatBox = function() {
     };
     xhr.send();
   };
+
   //HTML5 SSE(Server Sent Event) initilization
   this.initServer = function() {
     server = new EventSource('php/chatprocess.php');
     server.onmessage = function(e) {
+
+      //update chat window
       if (oldata != e.data) {
         if(!chatZone) {
           chatZone = document.getElementById("chatZone");
         }
-
         chatZone.innerHTML += e.data;
         oldata = e.data;
       }
+
     };
   };
 };

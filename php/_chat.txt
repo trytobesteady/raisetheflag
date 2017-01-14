@@ -1,1 +1,6 @@
 <div class="chatmsg"><b>Player4068</b>: test<br/></div>
+<div class="chatmsg"><b>Player1142</b>: hello<br/></div>
+<div class="chatmsg"><b>Player8464</b>: nasenbaer<br/></div>
+<div class="chatmsg"><b>Player1142</b>: hallo nadine<br/></div>
+<div class="chatmsg"><b>Player1041</b>: adsa<br/></div>
+<div class="chatmsg"><b>Player253</b>: 1234<br/></div>

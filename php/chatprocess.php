@@ -11,21 +11,21 @@ function sendMsg($msg) {
   ob_flush();
   flush();
 }
+
 if(!empty($name) && !empty($msg)){
 	$fp = fopen("_chat.txt", 'a');
-    fwrite($fp, '<div class="chatmsg"><b>'.$name.'</b>: '.$msg.'<br/></div>'.PHP_EOL);
-    //fwrite($fp, $name.': '.$msg.PHP_EOL);
-    fclose($fp);
+  fwrite($fp, '<div class="chatmsg"><b>'.$name.'</b>: '.$msg.'<br/></div>'.PHP_EOL);
+  fclose($fp);
 }
 
-  if(file_exists("_chat.txt") && filesize("_chat.txt") > 0){
-   $arrhtml=array_reverse(file("_chat.txt"));
-   $html=$arrhtml[0];
+if(file_exists("_chat.txt") && filesize("_chat.txt") > 0){
+ $arrhtml=array_reverse(file("_chat.txt"));
+ $html=$arrhtml[0];
+}
 
-  }
-  if(filesize("_chat.txt") > 1000){
-    unlink("_chat.txt");
-  }
+if(filesize("_chat.txt") > 1000){
+  unlink("_chat.txt");
+}
 
 
 sendMsg($html);

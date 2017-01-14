@@ -18,7 +18,7 @@ var Main = function() {
   var container, stats;
   var mouse = new THREE.Vector2(), INTERSECTED;
   var camera, controls, raycaster, scene, renderer;
-  var playerOneA, playerOneB, playerTwoA, playerTwoB;
+  //var playerOneA, playerOneB, playerTwoA, playerTwoB;
   var boxSize = 200;
   var lookAtScene = true;
   var gameMessageDomObject;
@@ -48,7 +48,6 @@ var Main = function() {
     container = document.createElement('div');
     document.body.appendChild(container);
 
-    console.log(GameState);
     gameMessageDomObject = $('#game-message');
     errorMessageDomObject = $('#error-message');
     buttonNext = $('#button-next')[0];
@@ -212,7 +211,7 @@ var Main = function() {
     container.appendChild(renderer.domElement);
 
     lightHelper = new THREE.SpotLightHelper(light);
-    scene.add(lightHelper);
+    //scene.add(lightHelper);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.target.set(500, 0, 500);
@@ -264,7 +263,36 @@ var Main = function() {
     return flag;
   }
 
-  exports.moveToTile = function(playerPiece, targetTile) {
+  function getPlayerPieceById(id) {
+    console.log('123',id);
+    var curPiece;
+    if(id == 'p0') {
+      curPiece = Main.playerOneA;
+    } else if(id == 'p1') {
+      curPiece = Main.playerOneB;
+    } else if(id == 'p2') {
+      curPiece = Main.playerTwoA;
+    } else if(id == 'p3') {
+      curPiece = Main.playerTwoB;
+    }
+    return curPiece;
+  }
+
+  function getTargetTileByPosition(pos) {
+    console.log(pos);
+    var objectById = scene.getObjectById( pos, true );
+    return objectById;
+  }
+
+  //exports.moveToTileRelay = function(playerPiece, targetTile) {
+
+
+  exports.moveToTile = function(piece, target) {
+    var playerPiece = getPlayerPieceById(piece);
+    var targetTile = getTargetTileByPosition(target);
+
+    console.log(target, targetTile);
+
     var newLayerIndex = targetTile.userData.pos[2] + 1;
     var newHeight = newLayerIndex * boxSize / 2;
 
@@ -354,7 +382,10 @@ var Main = function() {
     }
   }
 
-  exports.buildOnTile = function(playerPiece, targetTile) {
+  exports.buildOnTile = function(piece, target) {
+    var playerPiece = getPlayerPieceById(piece);
+    var targetTile = getTargetTileByPosition(target);
+
     exports.resetHighlights();
     var newLayerIndex = targetTile.userData.pos[2] + 1;
     var newHeight = newLayerIndex * boxSize / 2;
@@ -465,6 +496,8 @@ var Main = function() {
   $(document).ready(function() {
     init();
     animate();
+
+    GameTransmit.init();
   });
 
   return exports;
