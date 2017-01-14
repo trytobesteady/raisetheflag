@@ -7,7 +7,7 @@ $name=strip_tags($_GET['name']);
 $msg=strip_tags($_GET['msg']);
 
 function sendMsg($msg) {
-  echo "data: $msg" . PHP_EOL;
+  echo "data: $msg " . PHP_EOL;
   ob_flush();
   flush();
 }

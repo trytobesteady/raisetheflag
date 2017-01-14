@@ -18,7 +18,6 @@ var Main = function() {
   var container, stats;
   var mouse = new THREE.Vector2(), INTERSECTED;
   var camera, controls, raycaster, scene, renderer;
-  //var playerOneA, playerOneB, playerTwoA, playerTwoB;
   var boxSize = 200;
   var lookAtScene = true;
   var gameMessageDomObject;
@@ -283,9 +282,6 @@ var Main = function() {
     var objectById = scene.getObjectById( pos, true );
     return objectById;
   }
-
-  //exports.moveToTileRelay = function(playerPiece, targetTile) {
-
 
   exports.moveToTile = function(piece, target) {
     var playerPiece = getPlayerPieceById(piece);

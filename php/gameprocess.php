@@ -3,6 +3,7 @@
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 
+$state=strip_tags($_GET['state']);
 $player=strip_tags($_GET['player']);
 $move=strip_tags($_GET['move']);
 $target=strip_tags($_GET['target']);
@@ -13,9 +14,9 @@ function sendMove($move) {
   flush();
 }
 
-if(!empty($player) && !empty($move) && !empty($target)){
+if(!empty($state) && !empty($player) && !empty($move) && !empty($target)){
   $fp = fopen("_game.txt", 'a');
-  fwrite($fp, $player.':'.$move.':'.$target.PHP_EOL);
+  fwrite($fp, $state.':'.$player.':'.$move.':'.$target.PHP_EOL);
   fclose($fp);
 }
 

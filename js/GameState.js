@@ -36,11 +36,11 @@ var GameState = function() {
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece) {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
             //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
-
+            var gState = 'state'+exports.state;
             var pieceId = 'p' + currentPlayerPiece.userData.id;
             var col = currentPlayerPiece.userData.color;
             var targetId = Main.currentGameObject.id;
-            GameTransmit.sendMove(pieceId, 'move', targetId);
+            GameTransmit.sendMove(gState, pieceId, 'move', targetId);
 
           } else {
             //move invalid
@@ -69,10 +69,11 @@ var GameState = function() {
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'red') {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
             //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            var gState = 'state'+exports.state;
             var pieceId = 'p' + currentPlayerPiece.userData.id;
             var col = currentPlayerPiece.userData.color;
             var targetId = Main.currentGameObject.id;
-            GameTransmit.sendMove(pieceId, 'move', targetId);
+            GameTransmit.sendMove(gState, pieceId, 'move', targetId);
 
           } else {
             //move invalid
@@ -84,10 +85,11 @@ var GameState = function() {
         //RED: BUILD
         if(isValidMove(currentPlayerPiece, Main.currentGameObject, true)){
           //Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          var gState = 'state'+exports.state;
           var pieceId = 'p' + currentPlayerPiece.userData.id;
           var col = currentPlayerPiece.userData.color;
           var targetId = Main.currentGameObject.id;
-          GameTransmit.sendMove(pieceId, 'build', targetId);
+          GameTransmit.sendMove(gState, pieceId, 'build', targetId);
 
         } else {
           //placement invalid
@@ -112,10 +114,11 @@ var GameState = function() {
         if(currentObject.userData.type == 'gridpiece' && currentPlayerPiece.userData.color == 'blue') {
           if(isValidMove(currentPlayerPiece, Main.currentGameObject, false)){
             //Main.moveToTile(currentPlayerPiece, Main.currentGameObject);
+            var gState = 'state'+exports.state;
             var pieceId = 'p' + currentPlayerPiece.userData.id;
             var col = currentPlayerPiece.userData.color;
             var targetId = Main.currentGameObject.id;
-            GameTransmit.sendMove(pieceId, 'move', targetId);
+            GameTransmit.sendMove(gState, pieceId, 'move', targetId);
           } else {
             //move invalid
           }
@@ -126,10 +129,11 @@ var GameState = function() {
         //BLUE: BUILD
         if(isValidMove(currentPlayerPiece, Main.currentGameObject, true)){
           //Main.buildOnTile(currentPlayerPiece, Main.currentGameObject);
+          var gState = 'state'+exports.state;
           var pieceId = 'p' + currentPlayerPiece.userData.id;
           var col = currentPlayerPiece.userData.color;
           var targetId = Main.currentGameObject.id;
-          GameTransmit.sendMove(pieceId, 'build', targetId);
+          GameTransmit.sendMove(gState, pieceId, 'build', targetId);
         } else {
           //placement invalid
         }

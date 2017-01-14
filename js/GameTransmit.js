@@ -2,6 +2,7 @@ var GameTransmit = {
 
   chatZone: null,
   name: null,
+  state: null,
   player: null,
   move: null,
   target: null,
@@ -28,28 +29,29 @@ var GameTransmit = {
   },
 
   //sending move
-  sendMove: function(pieceId, moveType, targetId) {
+  sendMove: function(gameState, pieceId, moveType, targetId) {
     //playerid = pieceId;
     //move = moveType +':'+targetId;
+    state = gameState;
     player = pieceId;
     move = moveType;
     target = targetId;
 
     //chatZone.innerHTML += pieceId+':'+moveType+':'+targetId+'<br>';
     //GameTransmit.oldData = pieceId+':'+moveType+':'+targetId+'<br>';
-    this.ajaxSent(pieceId, moveType, targetId);
+    this.ajaxSend(state, pieceId, moveType, targetId);
     return false;
   },
 
   //sending move to server
-  ajaxSent: function() {
+  ajaxSend: function() {
     try {
       xhr = new XMLHttpRequest();
     } catch (err) {
       alert(err);
     }
 
-    xhr.open('GET', 'php/gameprocess.php?player=' + player + '&move=' + move + '&target=' + target, false);
+    xhr.open('GET', 'php/gameprocess.php?state=' + state + '&player=' + player + '&move=' + move + '&target=' + target, false);
     xhr.onreadystatechange = function() {
       if (xhr.readyState == 4) {
         if (xhr.status == 200) {
@@ -79,9 +81,10 @@ var GameTransmit = {
         GameTransmit.oldData = e.data;
 
         var strArr = e.data.split(':')
-        var pieceId = strArr[0];
-        var moveType = strArr[1];
-        var targetId = parseInt(strArr[2]);
+        var state = strArr[0];
+        var pieceId = strArr[1];
+        var moveType = strArr[2];
+        var targetId = parseInt(strArr[3]);
 
         console.log('1#', strArr, pieceId);
 
