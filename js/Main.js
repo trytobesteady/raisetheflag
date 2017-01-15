@@ -242,7 +242,7 @@ var Main = function() {
 
     if (allPiecesPlaced()) {
       $(event.currentTarget).css('opacity', 0);
-      GameState.setState(1);
+      GameState.setState('state1');
       exports.resetHighlights();
       errorMessageDomObject.empty();
     } else {
@@ -359,7 +359,7 @@ var Main = function() {
     if (GameState.state == 1) {
       exports.availableMovesRed--;
       if (exports.availableMovesRed == 0) {
-        GameState.setState(2);
+        GameState.setState('state2');
       }
     }
 
@@ -367,13 +367,13 @@ var Main = function() {
     if (GameState.state == 3) {
       exports.availableMovesBlue--;
       if (exports.availableMovesBlue == 0) {
-        GameState.setState(4);
+        GameState.setState('state4');
       }
     }
 
     //win condition
     if (newLayerIndex == 4) {
-      GameState.setState(5);
+      GameState.setState('state5');
       console.log(playerPiece.userData.color + ' wins!');
     }
   }
@@ -408,9 +408,12 @@ var Main = function() {
     scene.add(newCube);
 
     if (GameState.state != 4) {
-      GameState.setState(GameState.state + 1);
+
+      console.log('----------------------->', GameState.state);
+
+      GameState.setState('state'+(GameState.state + 1));
     } else {
-      GameState.setState(1);
+      GameState.setState('state1');
     }
   }
 

@@ -93,8 +93,9 @@ var GameTransmit = {
           Main.moveToTile(pieceId, targetId);
         } else if(moveType == 'build') {
           Main.buildOnTile(pieceId, targetId);
+        } else if(moveType == 'statechange') {
+          GameState.setState(state);
         }
-
       }
     };
   }
