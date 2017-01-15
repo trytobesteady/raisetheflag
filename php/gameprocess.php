@@ -8,6 +8,10 @@ $player=strip_tags($_GET['player']);
 $move=strip_tags($_GET['move']);
 $target=strip_tags($_GET['target']);
 
+//$gameId = '_test';
+//$date = date('d-m-Y');
+//$filename='_game'.$gameId.'_'.$date.'.txt';
+
 function sendMove($move) {
   echo "data: $move" . PHP_EOL;
   ob_flush();

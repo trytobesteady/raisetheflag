@@ -263,7 +263,6 @@ var Main = function() {
   }
 
   function getPlayerPieceById(id) {
-    console.log('123',id);
     var curPiece;
     if(id == 'p0') {
       curPiece = Main.playerOneA;
@@ -278,7 +277,6 @@ var Main = function() {
   }
 
   function getTargetTileByPosition(pos) {
-    console.log(pos);
     var objectById = scene.getObjectById( pos, true );
     return objectById;
   }
@@ -286,9 +284,6 @@ var Main = function() {
   exports.moveToTile = function(piece, target) {
     var playerPiece = getPlayerPieceById(piece);
     var targetTile = getTargetTileByPosition(target);
-
-    console.log(target, targetTile);
-
     var newLayerIndex = targetTile.userData.pos[2] + 1;
     var newHeight = newLayerIndex * boxSize / 2;
 
@@ -408,9 +403,6 @@ var Main = function() {
     scene.add(newCube);
 
     if (GameState.state != 4) {
-
-      console.log('----------------------->', GameState.state);
-
       GameState.setState('state'+(GameState.state + 1));
     } else {
       GameState.setState('state1');

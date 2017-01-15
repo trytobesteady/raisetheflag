@@ -7,17 +7,13 @@ var GameState = function() {
   var currentPlayerPiece;
 
   exports.setState = function(state) {
-    console.log('--->1',state);
     var lastCharAsInt = parseInt(state.slice(-1));
-    console.log('--->2',lastCharAsInt);
     exports.state = lastCharAsInt;
     Main.updateGameMessage(exports.state);
-    GameTransmit.sendMove(state, -1, 'statechange', -1);
+    //GameTransmit.sendMove(state, -1, 'statechange', -1);
   }
 
-  exports.checkState = function(currentObject) {
-    console.log('#################', currentObject);
-
+  exports.checkState = function(currentObject) {    
     switch(exports.state) {
       case 0:
 

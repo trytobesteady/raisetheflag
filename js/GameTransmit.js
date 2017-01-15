@@ -86,8 +86,6 @@ var GameTransmit = {
         var moveType = strArr[2];
         var targetId = parseInt(strArr[3]);
 
-        console.log('1#', strArr, pieceId);
-
         //move piece
         if(moveType == 'move') {
           Main.moveToTile(pieceId, targetId);
