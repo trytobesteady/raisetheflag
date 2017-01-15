@@ -28,11 +28,11 @@ var ChatBox = function() {
     msg = document.getElementById("msg").value;
     chatZone.innerHTML += '<div class="chatmsg"><b>' + name + '</b>: ' + msg + '<br/></div>';
     oldata = '<div class="chatmsg"><b>' + name + '</b>: ' + msg + '<br/></div>';
-    this.ajaxSent();
+    this.ajaxSend();
     return false;
   };
   //sending message to server
-  this.ajaxSent = function() {
+  this.ajaxSend = function() {
     try {
       xhr = new XMLHttpRequest();
     } catch (err) {
